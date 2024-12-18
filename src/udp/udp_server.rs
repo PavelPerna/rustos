@@ -14,7 +14,7 @@ pub async fn server_start(host: &str, port:i16) -> Result<()> {
       // Set the key "hello" with value "world"
       let hn = String::from("");
       let _ = gethostname().write_str(&hn);
-      client.set("hello", hn.into()).await?;
+      client.set("hello", "mrdka".into()).await?;
     }else{
 	    client.set("hello","picakunda".into()).await?;
     }
