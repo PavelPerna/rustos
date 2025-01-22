@@ -3,25 +3,18 @@ use std::time::Duration;
 use std::thread;
 use std::net::{SocketAddr,UdpSocket};
 
-struct NodeInfo{
+pub struct NodeInfo{
     name:String,
     ip_address:String
 }
 
-trait TNode{
-    fn new(config:&Config) -> Node;
+pub trait TNode{
     async fn broadcast_id(&self);
     fn node_info(&self) -> NodeInfo;
 }
 
-struct Node{
-    config:Config
-}
-
-impl NodeInfo{
-    fn new(n:&str,a:&str) -> NodeInfo{
-        NodeInfo{name:String::from(n),ip_address:String::from(a)}
-    }
+pub struct Node{
+    pub config:Config
 }
 
 impl TNode for Node{
@@ -29,7 +22,7 @@ impl TNode for Node{
         // Create UDP socket for broadcasting
         let socket = UdpSocket::bind("0.0.0.0:0").expect("Couldn't bind to socket");
         socket.set_broadcast(true).expect("Failed to set broadcast option");
-        let broadcast_message = self.config.getId(); // Replace with your application identifier
+        let broadcast_message = self.config.getName(); // Replace with your application identifier
         let broadcast_address = self.config.getAddress();
         let broadcast_port = self.config.getPort();
         let broadcast_delay = self.config.getDelay();
@@ -44,12 +37,7 @@ impl TNode for Node{
         });
     }
 
-    fn new(cfg:&Config) -> Node{
-        Node{config:cfg.clone()}
-    }
-
     fn node_info(&self) ->NodeInfo{
-        let result = NodeInfo::new(&self.config.getId(),&self.config.getAddress());
-        result
+        NodeInfo{ip_address:self.config.getAddress().clone(),name:self.config.getName().clone()}
     }
 }
