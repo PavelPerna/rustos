@@ -4,6 +4,7 @@ use core::fmt::Write;
 use kore::std::io::*;
 
 pub mod kore;
+pub mod test;
 
 // LIBC handling 
 extern crate libc;

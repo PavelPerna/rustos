@@ -15,7 +15,7 @@ pub trait Read {
 }
 
 pub struct InputOutput{
-    fd: c_int, // IO handle 0 - Input 1 - Output
+    pub fd: c_int, // IO handle 0 - Input 1 - Output
 }
 
 

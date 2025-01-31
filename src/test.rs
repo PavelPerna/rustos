@@ -1,4 +1,4 @@
-#![cfg(test)]
+#[cfg(test)]
 mod tests {
     use crate::{Read,InputOutput,SYS_READ,SYS_WRITE};
 
