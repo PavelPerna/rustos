@@ -1,69 +1,44 @@
-use std::process::Command;
-use std::{time::{Duration},thread,net::{UdpSocket}};
-use std::io::Write;
-use std::io;
+#![no_std]
+#![no_main]
+use core::fmt::Write;
+use kore::std::io::*;
 
-use crate::model::object::THasConstructor;
-use crate::node::node::*;
-use crate::node::config::*;
+pub mod kore;
 
-pub mod hardware;
-pub mod node;
-pub mod model;
+// LIBC handling 
+extern crate libc;
+#[link(name="c")]
+unsafe extern "C"  {
+}
 
-fn main() {
-    let mut cfg = Config::new();
+#[unsafe(no_mangle)]
+pub  fn main()-> !{
+    let mut stdout = InputOutput::from(SYS_WRITE); // Standard output
+    let mut stdin = InputOutput::from(SYS_READ);
+    let buf:&mut [u8] = &mut [0;1024];                                      
+
     
-    cfg.setName("Rustator");
-    cfg.setAddress("255.255.255.255");
-    cfg.setPort(12345);
-    cfg.setDelay(5);
-    
-    let node = Node{config:cfg};
-    
-    // Create UDP socket for broadcasting
-    let socket = UdpSocket::bind("0.0.0.0:0").expect("Couldn't bind to socket");
-    socket.set_broadcast(true).expect("Failed to set broadcast option");
+    loop{
+        let len :i32 = stdin.readln(buf).expect("Error reading from STDIN !!!");
+        if len > 0 {
+            let data = core::str::from_utf8(&buf[0..len as usize]).expect("Pica");
+            let _ = write!(&mut stdout,"Nactena data: Delka({}) , Obsah({})",len,data);
+        }else{  
+            let _ = write!(&mut stdout,"Chyba  pico !!!" );
+        }    
+    }
+}
 
+pub fn test(){
+    let mut stdout = InputOutput::from(SYS_WRITE); // Standard output
+    let mut stdin = InputOutput::from(SYS_READ);
+    let buf:&mut [u8] = &mut [0;1024];                                      
 
-
-    // Create thread for refreshing hosts in network
-    thread::spawn(move || {
-        loop {
-            // Construct the nmap command
-            let output = Command::new("arp")
-                .output()
-                .expect("Failed to execute nmap command");
-
-            let stdout = io::stdout(); 
-            let mut lock = stdout.lock();
-            
-            // Check if the command executed successfully
-            if output.status.success() {
-                // Parse the nmap output (you might need to adjust this based on nmap's output format)
-                let output_str = String::from_utf8_lossy(&output.stdout); 
-                // Extract IP addresses from the output (this is a simplified example)
-                // You'll likely need more robust parsing logic
-                let mut line_nr : usize = 0;
-                let mut header : Vec<String> = vec![];
-                let mut index : usize = 0;
-                    
-                for line in output_str.lines() {
-                    index = 0;
-                    let data = line.split_whitespace().into_iter();
-                    for column in data{
-                        match line_nr{
-                            0 => {header.push(column.to_string());},
-                            _ =>{writeln!(&mut lock,"{}:{}",header[index],column);index += 1;}
-                        };
-                    }
-                    writeln!(&mut lock,"\r\n{}\r\n","-".repeat(30));
-                    line_nr += 1;
-                }
-            } else {
-            }
-            thread::sleep(Duration::from_secs(5)); // Broadcast every 5 seconds (adjust as needed)
-        }
-    });
-    thread::sleep(Duration::from_secs(120));
+    let len :i32 = stdin.read(buf, 1024).expect("Error reading from STDIN !!!");
+    if len > 0 {
+        let data = core::str::from_utf8(&buf[0..len as usize]).expect("Pica");
+        let _ = write!(&mut stdout,"Nactena data: Delka({}) , Obsah({})",len,data);
+    }else{  
+        let _ = write!(&mut stdout,"Chyba  pico !!!" );
+    }
 }
