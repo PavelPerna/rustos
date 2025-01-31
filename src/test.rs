@@ -5,8 +5,7 @@ extern crate libc;
 unsafe extern "C"  {
 }
 mod tests {
-    use crate::{InputOutput,SYS_READ,SYS_WRITE};
-
+    use crate::*;
 
     // Note this useful idiom: importing names from outer (for mod tests) scope.
     // LIBC handling 
