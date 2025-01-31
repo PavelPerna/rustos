@@ -5,6 +5,7 @@ extern crate libc;
 unsafe extern "C"  {
 }
 mod tests {
+    #[cfg(test)]
     use crate::*;
 
     // Note this useful idiom: importing names from outer (for mod tests) scope.

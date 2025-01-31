@@ -40,7 +40,7 @@ pub trait SysCall{
     fn syscall(sysno: SysID, arg : &SyscallArguments ){
 
     }
-    fn syscall0(sysno){
+    fn syscall0(){
         
     }
 }
