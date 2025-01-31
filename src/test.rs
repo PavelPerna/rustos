@@ -1,6 +1,11 @@
 #[cfg(test)]
 mod tests {
-    use crate::{Read,InputOutput,SYS_READ,SYS_WRITE};
+    use crate::{InputOutput,SYS_READ,SYS_WRITE};
+    // LIBC handling 
+    extern crate libc;
+    #[link(name="c")]
+    unsafe extern "C"  {
+    }
 
     // Note this useful idiom: importing names from outer (for mod tests) scope.
     // LIBC handling 
