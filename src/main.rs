@@ -12,8 +12,9 @@ extern crate libc;
 unsafe extern "C"  {
 }
 
+
 #[unsafe(no_mangle)]
-pub  fn main() -> i32{
+pub fn main() -> i32{
     #[cfg(not(test))]
     readwrite(); 
     #[cfg(test)]
@@ -21,16 +22,17 @@ pub  fn main() -> i32{
 }
 
 #[unsafe(no_mangle)]
-pub  fn readwrite()-> !{
+pub fn read()-> !{
     let mut stdout = InputOutput::from(SYS_WRITE); // Standard output
     let mut stdin = InputOutput::from(SYS_READ);
-    let buf:&mut [u8] = &mut [0;1024];                                      
+    let buf_max_len: u16 = 1024
+    let buf:&mut [u8] = &mut [0;buf_max_len as usize];                                      
 
     
     loop{
         let len :i32 = stdin.readln(buf).expect("I/O(READ) Error");
         if len > 0 {
-            let data = core::str::from_utf8(&buf[0..len as usize]).expect("I/O(WRITEBUFFER) Error");
+            let data = core::str::from_utf8(&buf[0..len as usize]).expect("I/O(BUFFER) Error");
             let _ = write!(&mut stdout,"I/O:READ:DEBUG=(({}))'({})'",len,data);
         }else{  
             let _ = write!(&mut stdout,"I/O(READ)[ERROR=Data Len]:'(({}))'({})'", len, data);
