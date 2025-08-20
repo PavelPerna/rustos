@@ -25,8 +25,8 @@ pub fn main() -> i32{
 pub fn read()-> !{
     let mut stdout = InputOutput::from(SYS_WRITE); // Standard output
     let mut stdin = InputOutput::from(SYS_READ);
-    let buf_max_len: u16 = 1024
-    let buf:&mut [u8] = &mut [0;buf_max_len as usize];                                      
+    let buf_max_len: u8 = 1024;
+    let buf:&mut [u8] = &mut [0;buf_max_len];                                      
 
     
     loop{
