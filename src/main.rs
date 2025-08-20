@@ -33,7 +33,7 @@ pub  fn readwrite()-> !{
             let data = core::str::from_utf8(&buf[0..len as usize]).expect("I/O(WRITEBUFFER) Error");
             let _ = write!(&mut stdout,"I/O:READ:DEBUG='{}'({})",data,len);
         }else{  
-            let _ = write!(&mut stdout,"I/O(READ)[ERROR=Data Len]:'{}'(0)", data);
+            let _ = write!(&mut stdout,"I/O(READ)[ERROR=Data Len]:'({})'(0)", data);
         }    
     }
 }
